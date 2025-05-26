@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Animal Info App</string>
+    <string name="fill_all_fields">Please fill all fields</string>
+    <string name="invalid_email">Please enter a valid email</string>
+    <string name="password_too_short">Password must be at least 6 characters</string>
+    <string name="passwords_not_match">Passwords do not match</string>
+    <string name="registration_success">Registration successful</string>
+    <string name="registration_failed">Registration failed: </string>
+    <string name="email_already_used">Email is already in use</string>
+    <string name="login_success">Login successful</string>
+    <string name="login_failed">Login failed: </string>
+    <string name="user_not_logged_in">User is not logged in</string>
+    <string name="animal_name_required">Please enter animal name</string>
+    <string name="animal_added">Animal added successfully</string>
+
+    <!-- Hints / Labels -->
+    <string name="name_hint">Name</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="phone_hint">Phone</string>
+    <string name="animal_name_hint">Animal Name</string>
+    <string name="animal_desc_hint">Animal Description</string>
+    <string name="animal_place_of_found">Place of Found</string>
+    <string name="search_hint">Search Animal</string>
+
+    <!-- Buttons -->
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
+    <string name="add_animal">Add Animal</string>
+    <string name="back">Back</string>
+    <string name="language_switch">EN/HE</string>
+
+</resources>

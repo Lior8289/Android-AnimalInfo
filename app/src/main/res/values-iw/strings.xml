@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">אפליקציית מידע על חיות</string>
+    <string name="fill_all_fields">אנא מלא את כל השדות</string>
+    <string name="invalid_email">אנא הזן כתובת אימייל תקינה</string>
+    <string name="password_too_short">הסיסמה חייבת להיות לפחות באורך 6 תווים</string>
+    <string name="passwords_not_match">הסיסמאות אינן תואמות</string>
+    <string name="registration_success">נרשמת בהצלחה</string>
+    <string name="registration_failed">ההרשמה נכשלה: </string>
+    <string name="email_already_used">אימייל זה כבר בשימוש</string>
+    <string name="login_success">התחברת בהצלחה</string>
+    <string name="login_failed">ההתחברות נכשלה: </string>
+    <string name="user_not_logged_in">אינך מחובר</string>
+    <string name="animal_name_required">נא להזין שם לחיה</string>
+    <string name="animal_added">החיה נוספה בהצלחה</string>
+
+    <!-- Hints / Labels -->
+    <string name="name_hint">שם</string>
+    <string name="email_hint">אימייל</string>
+    <string name="password_hint">סיסמה</string>
+    <string name="confirm_password_hint">אישור סיסמה</string>
+    <string name="phone_hint">טלפון</string>
+    <string name="animal_name_hint">שם החיה</string>
+    <string name="animal_desc_hint">תיאור החיה</string>
+    <string name="animal_place_of_found">מקום בו נמצאת</string>
+    <string name="search_hint">חיפוש חיה</string>
+
+    <!-- Buttons -->
+    <string name="login">התחבר</string>
+    <string name="logout">התנתק</string>
+    <string name="register">הירשם</string>
+    <string name="add_animal">הוסף חיה</string>
+    <string name="back">חזרה</string>
+    <string name="language_switch">עב/אנ</string>
+</resources>

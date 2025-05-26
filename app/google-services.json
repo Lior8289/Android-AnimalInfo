@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "881701739493",
+    "firebase_url": "https://animalinfoapp-88934-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "animalinfoapp-88934",
+    "storage_bucket": "animalinfoapp-88934.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881701739493:android:d24e157784c4e7d4e4ed0c",
+        "android_client_info": {
+          "package_name": "com.example.animalinfoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbTOjkKOdiCeViJg6QBuEQ1l9Jr8QkALc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
