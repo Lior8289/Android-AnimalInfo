@@ -3,11 +3,14 @@ package com.example.animalinfoapp.fragments;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,6 +43,7 @@ public class RegisterFragment extends Fragment {
         etPhone = view.findViewById(R.id.editTextPhone);
 
         Button btnRegister = view.findViewById(R.id.btnRegister);
+        Button btnGoToLogin = view.findViewById(R.id.btnGoToLogin);
 
         btnRegister.setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
@@ -85,6 +89,24 @@ public class RegisterFragment extends Fragment {
                             Toast.makeText(getContext(), getString(R.string.registration_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
+        });
+
+        btnGoToLogin.setOnClickListener(v -> {
+            Navigation.findNavController(view)
+                    .navigate(R.id.action_registerFragment_to_loginFragment);
+        });
+
+        CheckBox checkboxShowPassword = view.findViewById(R.id.checkboxShowPassword);
+        checkboxShowPassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                etConfirm.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            } else {
+                etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                etConfirm.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+            etPassword.setSelection(etPassword.getText().length());
+            etConfirm.setSelection(etConfirm.getText().length());
         });
 
         return view;

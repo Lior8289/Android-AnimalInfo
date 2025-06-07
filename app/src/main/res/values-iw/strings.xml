@@ -23,6 +23,8 @@
     <string name="animal_desc_hint">תיאור החיה</string>
     <string name="animal_place_of_found">מקום בו נמצאת</string>
     <string name="search_hint">חיפוש חיה</string>
+    <string name="show_password">הצג סיסמה</string>
+    <string name="no_animals_found">לא נמצאו חיות</string>
 
     <!-- Buttons -->
     <string name="login">התחבר</string>
@@ -31,4 +33,6 @@
     <string name="add_animal">הוסף חיה</string>
     <string name="back">חזרה</string>
     <string name="language_switch">עב/אנ</string>
+    <string name="deleted">חיה נמחקה</string>
+    <string name="undo">חזור</string>
 </resources>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import static android.content.Context.MODE_PRIVATE;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 
 public class loginFragment extends Fragment {
 
@@ -45,6 +48,7 @@ public class loginFragment extends Fragment {
         etPassword = view.findViewById(R.id.editTextPassword);
         Button btnLogin     = view.findViewById(R.id.btnLogin);
         Button btnRegister  = view.findViewById(R.id.btnGoToRegister);
+        CheckBox checkboxShowPassword = view.findViewById(R.id.checkboxShowPassword);
 
         btnRegister.setOnClickListener(v -> {
             Navigation.findNavController(view)
@@ -81,6 +85,15 @@ public class loginFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
+        });
+
+        checkboxShowPassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            } else {
+                etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+            etPassword.setSelection(etPassword.getText().length());
         });
 
         return view;

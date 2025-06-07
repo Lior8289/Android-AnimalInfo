@@ -16,39 +16,53 @@
         android:id="@+id/itemAnimalLayout"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:padding="12dp"
+        android:gravity="center_horizontal">
 
-        <!-- 1) הוספת ImageView להצגת תמונת החיה -->
-        <ImageView
+        <!-- Animal Image with rounded corners -->
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/animalImage"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="180dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@drawable/giraffe" />
-        <!-- ic_default_image = תמונת ברירת מחדל (דמה). אפשר להחליף בשם אחר שקיים ב-drawable -->
 
-        <!-- 2) שאר הרכיבים של החיה -->
+        <!-- Animal Name -->
         <TextView
             android:id="@+id/animalName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="@string/animal_name_hint" />
+            android:text="Animal Name"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="#222"
+            android:layout_marginTop="12dp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center" />
 
+        <!-- Animal Description -->
         <TextView
             android:id="@+id/animalDescription"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:text="@string/animal_desc_hint"/>
+            android:text="Animal description goes here."
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textColor="#444"
+            android:layout_marginTop="6dp"
+            android:gravity="center" />
 
+        <!-- Animal Place -->
         <TextView
             android:id="@+id/animalPlace"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:text="@string/animal_place_of_found"/>
+            android:text="Location"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="#888"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:gravity="center" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

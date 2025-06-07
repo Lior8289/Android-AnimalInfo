@@ -28,7 +28,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class AddAnimalFragment extends Fragment {
 
     private EditText etName, etDescription, etPlaceOfFound;
-    private Button btnAdd, btnBack ,btnLogout;
+    private Button btnAdd, btnBack;
 
     @Nullable
     @Override
@@ -43,7 +43,6 @@ public class AddAnimalFragment extends Fragment {
         etPlaceOfFound = view.findViewById(R.id.etAnimalPlaceOfFound);
         btnAdd         = view.findViewById(R.id.btnAddAnimal);
         btnBack        = view.findViewById(R.id.btnBack);
-        btnLogout      = view.findViewById(R.id.btnLogout);
 
         btnAdd.setOnClickListener(v -> {
             Log.d("ADD", "Add button clicked");
@@ -102,16 +101,6 @@ public class AddAnimalFragment extends Fragment {
         btnBack.setOnClickListener(v -> {
             Navigation.findNavController(view)
                     .navigate(R.id.action_addAnimalFragment_to_animalsFragment);
-        });
-        btnLogout.setOnClickListener(v -> {
-            // מחיקת נתוני המשתמש מ-SharedPreferences
-            SharedPreferences preferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.clear(); // מוחק את כל הנתונים
-            editor.apply();
-
-            // מעבר למסך ההתחברות
-            Navigation.findNavController(v).navigate(R.id.action_addAnimalFragment_to_loginFragment);
         });
         return view;
     }

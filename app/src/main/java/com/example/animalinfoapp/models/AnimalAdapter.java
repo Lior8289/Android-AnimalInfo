@@ -93,6 +93,15 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
         return filteredList.size();
     }
 
+    // Callback interface for data change
+    public interface OnDataChangedListener {
+        void onDataChanged();
+    }
+    private OnDataChangedListener dataChangedListener;
+    public void setOnDataChangedListener(OnDataChangedListener listener) {
+        this.dataChangedListener = listener;
+    }
+
     // פונקציית הסינון (מחפשים בשמות/תיאורים גם בעברית וגם באנגלית)
     public void filter(String query) {
         query = query.toLowerCase().trim();
@@ -116,6 +125,22 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
             }
         }
         notifyDataSetChanged();
+        if (dataChangedListener != null) dataChangedListener.onDataChanged();
+    }
+
+    // Remove item from filteredList and notify
+    public Animal removeItem(int position) {
+        Animal removed = filteredList.remove(position);
+        notifyItemRemoved(position);
+        if (dataChangedListener != null) dataChangedListener.onDataChanged();
+        return removed;
+    }
+
+    // Restore item to filteredList and notify
+    public void restoreItem(Animal animal, int position) {
+        filteredList.add(position, animal);
+        notifyItemInserted(position);
+        if (dataChangedListener != null) dataChangedListener.onDataChanged();
     }
 
     static class AnimalViewHolder extends RecyclerView.ViewHolder {

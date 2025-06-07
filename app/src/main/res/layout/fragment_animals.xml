@@ -7,67 +7,99 @@
     android:background="@drawable/jungle_background"
     android:padding="16dp">
 
-
-
-    <!-- שורת חיפוש -->
-
-    <SearchView
-        android:id="@+id/searchViewAnimals"
+    <!-- Top bar with logout and search, in a card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/topBarCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:elevation="4dp"
-        android:queryHint="@string/search_hint"
-        android:background="#7EFFFFFF"
-        android:textColorHint="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/btnLogout"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="6dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.5" />
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
-        android:text="@string/logout"
-        android:textColor="@color/white"
-        android:onClick="onLogoutClicked"
-        app:cornerRadius="20dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- רשימת החיות -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewAnimals"
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/black"
+                android:text="@string/logout"
+                android:textColor="@color/white"
+                android:onClick="onLogoutClicked"
+                app:cornerRadius="20dp"
+                android:layout_marginEnd="12dp" />
+
+            <SearchView
+                android:id="@+id/searchViewAnimals"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:elevation="4dp"
+                android:queryHint="@string/search_hint"
+                android:background="#7EFFFFFF"
+                android:textColorHint="#000000" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- RecyclerView in a card for modern look, moved down -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/listCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@id/btnGoToAddAnimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/topBarCard"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchViewAnimals"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="86dp">
 
-    <!-- כפתור הוספת חיה -->
-    <Button
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAnimals"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="8dp" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- FloatingActionButton for add animal -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnGoToAddAnimal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/black"
-        android:elevation="4dp"
-        android:text="@string/add_animal"
-        android:textColor="@color/white"
-        app:cornerRadius="20dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_add"
+        android:contentDescription="@string/add_animal"
+        app:backgroundTint="@color/black"
+        app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Empty view for no results -->
+    <TextView
+        android:id="@+id/textViewEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_animals_found"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/topBarCard"
+        app:layout_constraintBottom_toTopOf="@id/btnGoToAddAnimal"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

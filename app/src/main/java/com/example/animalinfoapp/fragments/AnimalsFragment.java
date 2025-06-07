@@ -2,6 +2,10 @@ package com.example.animalinfoapp.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,17 +13,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.animalinfoapp.R;
 import com.example.animalinfoapp.models.Animal;
 import com.example.animalinfoapp.models.AnimalAdapter;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,12 +47,13 @@ import java.util.List;
 
 public class AnimalsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
     private AnimalAdapter adapter;
     private ArrayList<Animal> animalsList = new ArrayList<>();
     private DatabaseReference databaseReference;
     private Button btnAddAnimal, btnLogout;
     private SearchView searchView;
+    private TextView emptyView;
+    private View listCard;
 
     @Nullable
     @Override
@@ -53,35 +63,111 @@ public class AnimalsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_animals, container, false);
 
-
-        recyclerView = view.findViewById(R.id.recyclerViewAnimals);
-        btnAddAnimal = view.findViewById(R.id.btnGoToAddAnimal);
-        searchView = view.findViewById(R.id.searchViewAnimals);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewAnimals);
+        FloatingActionButton btnAddAnimal = view.findViewById(R.id.btnGoToAddAnimal);
+        SearchView searchView = view.findViewById(R.id.searchViewAnimals);
+        emptyView = view.findViewById(R.id.textViewEmpty);
+        listCard = view.findViewById(R.id.listCard);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        // יוצרים את ה-Adapter + מחברים אותו ל-RecyclerView
         adapter = new AnimalAdapter(requireContext(), animalsList);
         recyclerView.setAdapter(adapter);
+        adapter.setOnDataChangedListener(this::updateEmptyView);
+        updateEmptyView();
+
+        // --- SWIPE TO DELETE WITH UNDO AND GARBAGE ICON ---
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            Drawable icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete);
+            Paint paint = new Paint();
+            {
+                paint.setColor(Color.RED);
+            }
+            Animal deletedAnimal = null;
+            int deletedPosition = -1;
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                deletedPosition = viewHolder.getAdapterPosition();
+                deletedAnimal = adapter.removeItem(deletedPosition);
+                // Remove from Firebase as well
+                DatabaseReference animalsRef = FirebaseDatabase.getInstance().getReference("animals");
+                animalsRef.orderByChild("nameEn").equalTo(deletedAnimal.getNameEn())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot ds : snapshot.getChildren()) {
+                                    ds.getRef().removeValue();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+                        });
+                Snackbar.make(recyclerView, R.string.deleted, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.undo, v -> {
+                            adapter.restoreItem(deletedAnimal, deletedPosition);
+                            recyclerView.scrollToPosition(deletedPosition);
+                            // Restore to Firebase
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("animals");
+                            ref.push().setValue(deletedAnimal);
+                        })
+                        .show();
+                updateEmptyView();
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                View itemView = viewHolder.itemView;
+                float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                float width = height / 3;
+
+                // Draw red background
+                c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(),
+                        (float) itemView.getLeft() + dX, (float) itemView.getBottom(), paint);
+
+                // Animate icon: scale up as swipe progresses
+                if (icon != null) {
+                    int iconTop = itemView.getTop() + (int) (height - width) / 2;
+                    int iconMargin = (int) ((height - width) / 2);
+                    int iconLeft = itemView.getLeft() + iconMargin;
+                    int iconRight = itemView.getLeft() + iconMargin + (int) width;
+                    int iconBottom = iconTop + (int) width;
+
+                    float progress = Math.min(1f, Math.abs(dX) / itemView.getWidth());
+                    int saveCount = c.save();
+                    float scale = 0.7f + 0.3f * progress; // scale from 0.7 to 1.0
+                    c.scale(scale, scale, iconLeft + width / 2, iconTop + width / 2);
+                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                    icon.setAlpha((int) (255 * progress));
+                    icon.draw(c);
+                    c.restoreToCount(saveCount);
+                }
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+        // --- END SWIPE TO DELETE ---
 
         // כפתור מעבר למסך "הוסף חיה"
-        btnAddAnimal.setOnClickListener(v -> {
-            Navigation.findNavController(view)
-                    .navigate(R.id.action_animalsFragment_to_addAnimalFragment);
-        });
+        btnAddAnimal.setOnClickListener(v -> Navigation.findNavController(view)
+                .navigate(R.id.action_animalsFragment_to_addAnimalFragment));
 
         // מאזינים לשינויים בטקסט בשורת החיפוש
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // לחיצה על "חפש" במקלדת
                 adapter.filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // חיפוש חי (בכל הקלדה)
                 adapter.filter(newText);
                 return false;
             }
@@ -119,8 +205,6 @@ public class AnimalsFragment extends Fragment {
                         animalsList.add(animal);
                     }
                 }
-                // מוודאים שכל הנתונים נטענו ב-Adapter
-                // וקוראים ל-filter("") כדי להציג הכל
                 adapter.filter("");
                 Log.d("Firebase", "Animals loaded: " + animalsList.size());
             }
@@ -179,6 +263,16 @@ public class AnimalsFragment extends Fragment {
         } catch (IOException e) {
             Log.e("JSON", "Error reading animals JSON file", e);
             return null;
+        }
+    }
+
+    private void updateEmptyView() {
+        if (adapter.getItemCount() == 0) {
+            emptyView.setVisibility(View.VISIBLE);
+            listCard.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            listCard.setVisibility(View.VISIBLE);
         }
     }
 }
